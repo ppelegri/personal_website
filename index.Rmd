@@ -1,0 +1,17 @@
+---
+title: "Patrick Pelegri-O'Day"
+site: distill::distill_website
+image: "patrick.jpg"
+links:
+  - label: LinkedIn
+    url: "https://www.linkedin.com/in/patrick-pelegri-o-day-36281a57/"
+  - label: GitHub
+    url: "https://github.com/ppelegri"
+  - label: Email
+    url: "mailto:pap@bren.ucsb.edu"
+output:
+  postcards::trestles
+---
+ 
+I am passionate about the intersection of climate, resilience, and social justice. I am currently a Master's candidate in Environmental Science and Management at the Bren School of UC Santa Barbara. When I'm not working behind a computer, I love leading teen backpacking trips and developing my naturalist skills.
+
