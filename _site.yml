@@ -1,8 +1,8 @@
 name: "."
-title: "mfeo"
+title: "Patrick"
 theme: postcards.css
 description: |
-  mfeo
+  Patrick
 output_dir: "docs"
 navbar:
   right:
