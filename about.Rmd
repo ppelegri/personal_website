@@ -1,10 +1,13 @@
 ---
-title: "About this site"
-description: |
-  Some additional details about the website
+title: "About me"
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
+I am interested in natural climate solutions, particularly regenerative agriculture. I am also passionate about education and mentorship. My current projects include helping White Buffalo Land Trust gain financial value from their regenerative farming operation through ecosystem services credits, visualizing a dataset on cookstove use in Ghana for policymakers to interact with, and guiding youth on rite of passage backpacking trips in Yosemite with Back to Earth.
+
+I started working on climate issues in 2012 when I helped start successful fossil fuel divestment campaigns at Pomona College (where I went to undergrad) and Pitzer College. After exploring other sustainability sectors and graduating in 2015, I found a way to combine social justice and environmental stewardship by helping cities develop equitable climate adaptation and mitigation strategies from 2016 to 2021. 
+
+I am now pursuing a Master's degree at the Bren School of UCSB, where I am using my background in climate action and multidisciplinary problem solving to advance natural climate solutions.
