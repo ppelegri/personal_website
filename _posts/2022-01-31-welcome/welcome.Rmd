@@ -1,7 +1,7 @@
 ---
-title: "welcome"
+title: "Patrick's blog"
 description: |
-  A short description of the post.
+  Thoughts on climate, resilience, and equity
 author:
   - name: Patrick Pelegri-O'Day
 date: 2022-01-31
@@ -15,8 +15,5 @@ output:
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-Distill is a publication format for scientific and technical writing, native to the web.
 
-Learn more about using Distill at <https://rstudio.github.io/distill>.
-
-
+First blog post.

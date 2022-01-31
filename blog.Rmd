@@ -2,5 +2,3 @@
 title: "Blog"  
 listing: posts 
 ---
-
-This is my first blog post for ESM 244.
