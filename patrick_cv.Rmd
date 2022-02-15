@@ -1,0 +1,12 @@
+---
+title: "CV"
+author: "Patrick Pelegri-O'Day"
+date: "2/15/2022"
+output: html_document
+---
+
+<a href = 'patrick_cv.pdf' target = '_blank'>Click here for PDF</a>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
