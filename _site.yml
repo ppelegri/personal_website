@@ -13,5 +13,5 @@ navbar:
     - text: "Blog"
       href: blog.html
     - text: "CV"
-      href: patrick_cv.Rmd
+      href: patrick_cv.html
 output: distill::distill_article
