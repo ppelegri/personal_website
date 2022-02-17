@@ -13,6 +13,5 @@ navbar:
     - text: "Blog"
       href: blog.html
     - text: "CV"
-      href:
+      href: patrick_cv.Rmd
 output: distill::distill_article
-theme: postcards.css
