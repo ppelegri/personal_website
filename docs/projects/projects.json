@@ -1,0 +1,14 @@
+[
+  {
+    "path": "projects/",
+    "title": "Mono Lake levels",
+    "description": {},
+    "author": [],
+    "date": "2022-02-21",
+    "categories": [],
+    "contents": "\n\n\n\n\n\n\nFigure 1: Mono Lake levels from 1850-2017. This graph displays annual observations of the level of Mono Lake (feet above sea level). Note that the y-axis (lake levels) begins at 6350’. Dashed lines indicate lake levels at which ecologically important changes take place: at 6377’, land bridges emerge between the mainland and islands, allowing predators to access major bird nesting sites; at 6360’, lake salinity increases to 120 g/mL which lowers brine shrimp population, a food source for birds; and at 6350’, lake salinity increases to 150 g/mL which causes more severe impacts to brine shrimp and bird populations. Text boxes indicate important events in recent Mono Lake history. In 1941, the Los Angeles Department of Water and Power (DWP) begin withdrawing water from the lake; lake levels declined significantly soon after. In 1979, DWP was sued under Public Trust doctrine for its water diversions; lake levels stabilized and began to slowly increase afterwards.\n\n\n\n",
+    "preview": "projects/mono_lake_viz_files/figure-html5/unnamed-chunk-2-1.png",
+    "last_modified": "2022-02-21T14:07:53-08:00",
+    "input_file": {}
+  }
+]

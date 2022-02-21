@@ -2,4 +2,4 @@
 title: "CV"
 ---
 
-<a href = 'patrick_cv.pdf' target = '_blank'>Click here for PDF</a>
+<a href = 'patrick_cv.pdf' target = '_blank'>Here is a link to my CV.</a>

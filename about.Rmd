@@ -1,5 +1,5 @@
 ---
-title: "About me"
+title: "About"
 ---
 
 ```{r setup, include=FALSE}
@@ -11,3 +11,5 @@ I started working on climate issues in 2012 when I helped start successful fossi
 I am now pursuing a Master's degree at the Bren School of UCSB, where I am using my background in climate action and multidisciplinary problem solving to advance natural climate solutions.
 
 My current projects include helping White Buffalo Land Trust gain financial value from their regenerative farming operation through ecosystem services credits, visualizing a dataset on cookstove use in Ghana for policymakers to interact with, and guiding youth on rite of passage backpacking trips in Yosemite with Back to Earth.
+
+<a href = 'patrick_cv.pdf' target = '_blank'>Here is a link to my CV.</a>
