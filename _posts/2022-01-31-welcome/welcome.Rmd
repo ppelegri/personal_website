@@ -1,14 +1,67 @@
 ---
-title: "Patrick's blog"
+title: "Mono Lake historical trends"
 description: |
-  Thoughts on climate, resilience, and equity
+  Visualization of Mono Lake levels and water management events over time
 author:
   - name: Patrick Pelegri-O'Day
-date: 2022-01-31
+date: 2021-11-29
 output:
   distill::distill_article:
+    code_folding: hide
     self_contained: false
 ---
 
 
-First blog post.
+```{r setup, include=TRUE, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+
+library(tidyverse)
+library(here)
+library(janitor)
+library(scales)
+```
+
+```{r}
+# Read in the data
+
+mono_raw <- read_csv(here('_posts', '2022-01-31-welcome', 'data', 'mono_lake_annual_levels.csv'), skip = 4) # skip the first four lines of the .csv, which do not contain observations
+
+mono <- mono_raw %>% 
+  janitor::row_to_names(1) %>%  
+  clean_names() %>% 
+  mutate(lake_level_feet_above_sea_level = as.numeric(lake_level_feet_above_sea_level)) %>%  
+  mutate(year = as.numeric(year)) 
+
+```
+
+```{r}
+# Visualize the change in Mono Lake level over time
+
+ggplot(mono, aes(year, lake_level_feet_above_sea_level)) +
+  
+  # Lake level line and annotation
+  geom_line(size = 1, color = "darkslateblue") +
+    annotate("text", x = 1875, y = 6420, label = "Lake level", fontface = "bold", color = "darkslateblue", size = 4, alpha = 0.9) + 
+ 
+  # Horizontal lines and associated annotations
+  geom_segment(aes(x = 1850, y = 6377, xend = 2017, yend = 6377), linetype = "dashed", color = "salmon3", size = 0.4) + 
+  geom_segment(aes(x = 1850, y = 6360, xend = 2017, yend = 6360), linetype = "dashed", color = "mediumpurple3", size = 0.4) +
+  geom_segment(aes(x = 1850, y = 6350, xend = 2017, yend = 6350), linetype = "dashed", color = "firebrick3", size = 0.4) +
+  annotate("text", x = 1870, y = 6382, label = "Land bridges emerge", fontface = "bold", color = "salmon3", size = 3, alpha = 0.9) +
+  annotate("text", x = 1873, y = 6365, label = "Decrease in brine shrimp", fontface = "bold", color = "mediumpurple3", size = 3, alpha = 0.9) +
+  annotate("text", x = 1879.5, y = 6355, label = "Acute impacts on shrimp & birds", fontface = "bold", color = "firebrick3", size = 3, alpha = 0.7) +
+  
+  # Vertical lines and associated annotations
+  geom_segment(aes(x = 1941, y = 6418, xend = 1941, yend = 6443), linetype = "twodash", color = "gray50", alpha = 0.3, size = 0.25) +
+  geom_segment(aes(x = 1979, y = 6374, xend = 1979, yend = 6443), linetype = "twodash", color = "gray50", alpha = 0.3, size = 0.25) +
+  annotate("label", x = 1941, y = 6450, label = "DWP begins\ndiverting water", fontface = "bold", color = "gray25", size = 3, fill = "snow1") +
+  annotate("label", x = 1979, y = 6450, label = "Lawsuit filed\nagainst DWP", fontface = "bold", color = "gray25", size = 3, fill = "snow1") +
+  
+  # Scales, labels, and theme
+  scale_x_continuous(breaks = scales::pretty_breaks(5)) +
+  scale_y_continuous(limits = c(6340, 6460), breaks = pretty_breaks(4)) +
+  labs(x = "Year", y = "Mono Lake level (ft above sea level)\n") +
+  theme_minimal()
+```
+
+**Figure 1: Mono Lake levels from 1850-2017.** This graph displays annual observations of the level of Mono Lake (feet above sea level). Note that the y-axis (lake levels) begins at 6350'. Dashed lines indicate lake levels at which ecologically important changes take place: at 6377', land bridges emerge between the mainland and islands, allowing predators to access major bird nesting sites; at 6360', lake salinity increases to 120 g/mL which lowers brine shrimp population, a food source for birds; and at 6350', lake salinity increases to 150 g/mL which causes more severe impacts to brine shrimp and bird populations. Text boxes indicate important events in recent Mono Lake history. In 1941, the Los Angeles Department of Water and Power (DWP) begin withdrawing water from the lake; lake levels declined significantly soon after. In 1979, DWP was sued under Public Trust doctrine for its water diversions; lake levels stabilized and began to slowly increase afterwards.
