@@ -10,8 +10,9 @@ links:
   - label: Email
     url: "mailto:pap@bren.ucsb.edu"
 output:
-  postcards::trestles
+  postcards::solana
 ---
- 
+
+<br> 
 I am passionate about the intersection of climate, resilience, and social justice. I am currently a Master's candidate in Environmental Science and Management at the Bren School of UC Santa Barbara. When I'm not working behind a computer, I love leading teen backpacking trips and developing my naturalist skills.
 
