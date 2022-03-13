@@ -6,6 +6,8 @@ title: "About"
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
+![Palo Alto Baylands. Photo credit: Veronica Weber, Palo Alto Weekly.](https://www.paloaltoonline.com/news/photos/2013/november/1/32572_full.jpg)
+
 I started working on climate issues in 2012 when I helped start successful fossil fuel divestment campaigns at Pomona College (where I went to undergrad) and Pitzer College. After exploring other sustainability sectors and graduating in 2015, I found a way to combine social justice and environmental stewardship by helping cities develop equitable climate adaptation and mitigation strategies from 2016 to 2021. 
 
 I am now pursuing a Master's degree at the Bren School of UCSB, where I am using my background in climate action and multidisciplinary problem solving to advance natural climate solutions.

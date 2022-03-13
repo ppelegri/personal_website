@@ -1,0 +1,151 @@
+---
+title: "Willamette Fish Passage time series"
+description: |
+  Trends in salmonid populations over time at Willamette Falls
+author: Patrick Pelegri-O'Day
+date: 2022-03-05
+output:
+  distill::distill_article:
+    code_folding: hide
+    self_contained: false
+---
+
+```{r setup, include=TRUE, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+
+library(here)
+library(tidyverse)
+library(tsibble)
+library(feasts)
+library(slider)
+library(lubridate)
+```
+
+## Overall {.tabset}
+
+This report visualizes fish passage data at Willamette Falls collected by the University of Washington's Columbia Basin Research initiative from 2001 to 2010. Data collection at this site is managed by a combination of federal, state, and tribal agencies. The tabs below visualize these fish passage data through a time series plot of daily counts, a season plot, and annual counts by species. 
+
+![Salmon in Katmai National Park, Alaska. From World Atlas](https://www.worldatlas.com/r/w768/upload/bf/a2/f8/shutterstock-164489237.jpg)
+
+
+**Data citation:** University of Washington, Columbia Basin Research. 2010. DART Adult Passage Graphics & Text. http://www.cbr.washington.edu/dart/query/adult_graph_text.
+
+![Arrow indicates location of Willamette Falls. From Clemens et al. 2017: https://doi.org/10.1007/s10750-017-3096-4](https://i.postimg.cc/zfZ8Nz7k/willamette-falls.png)
+
+
+```{r}
+# Read in the data and perform initial wrangling
+
+fish_raw <- read_csv(here('_posts', '2022-03-05-fish-passage-ts', 'data', 'willamette_fish_passage.csv'))
+
+fish_ts <- fish_raw %>% 
+  janitor::clean_names() %>% 
+  mutate(date = mdy(date)) %>% 
+  as_tsibble(key = NULL, index = date) %>%   
+  select(coho, jack_coho, steelhead) %>% 
+  replace_na(list(coho = 0, jack_coho = 0, steelhead = 0)) %>%  # replace NA values with 0
+  pivot_longer( # so that we can visualize them all on the same panel
+    cols = coho:steelhead,
+    names_to = "species",
+    values_to = 'count'
+  ) %>% 
+  mutate(species = case_when(
+    species == 'coho' ~ "Coho",
+    species == 'jack_coho' ~ "Jack Coho",
+    species == 'steelhead' ~ "Steelhead"
+  ))
+
+fish_ts[fish_ts < 0] <- 0 # replace negative values to 0 because negative counts don't make sense and time series has an issue if there are missing values.
+```
+
+
+### Original time series
+
+```{r}
+# Time series graph
+
+ggplot(data = fish_ts, aes(x = date, y = count)) +
+  geom_line(aes(color = species)) +
+  labs(x = "Date",
+       y = "Count",
+       color = "Species") +
+  scale_color_manual(values = c('dodgerblue3', 'firebrick4', 'cornsilk4')) +
+  theme_minimal()
+```
+
+**Figure 1.** Time series plot of Coho, Jack Coho, and Steelhead counts at the Willamette Falls fish passage from 2001-2010.
+
+**Figure 1 takeaways**
+
+* The Steelhead run has been the most consistent of the three species observed, and the Steelhead run occurs at a different time of year than the Coho and Jack Coho.
+* The Coho run has been inconsistent from year to year but in large years has had the highest counts of the three species. The Jack Coho had the smallest runs of the three species on average. 
+* The Jack Coho and Coho runs appear to occur at the same time of year.
+
+### Season plots
+
+```{r}
+# Plot season plot
+
+gg_season(data = fish_ts, y = count) +
+  scale_color_viridis_c(breaks = c(1, 3, 5, 7, 9), 
+                        labels = c(2001, 2003, 2005, 2007, 2009)) +
+  facet_wrap(~species) +
+  labs(y = "Count", x = "Date", color = "Year")
+```
+**Figure 2.** Monthly trends in counts of Steelhead, Coho, and Jack Coho at Willamette Falls fish passage from 2001 to 2010
+
+**Figure 2 takeaways**
+
+* Coho and Jack Coho have a distinct peak in counts around October. Counts were closer to 0 the rest of the year.
+* Steelhead counts are more evenly distributed throughout the year than Coho and Jack Coho. Steelhead counts peak around June and are lowest from roughly September to November.
+
+### Annual counts by species
+
+```{r}
+# Prepare data for plot
+
+fish_counts_df <- fish_raw %>% 
+  
+  # This code repeats what we did to create fish_ts without making it a ts, except observations with negative counts are removed instead of replaced with 0
+  janitor::clean_names() %>% 
+  mutate(date = mdy(date)) %>% 
+  select(coho, jack_coho, steelhead, date) %>% 
+  replace_na(list(coho = 0, jack_coho = 0, steelhead = 0)) %>%
+  filter(coho >= 0, jack_coho >= 0, steelhead >=0) %>% # remove observations with negative counts
+  pivot_longer( 
+    cols = coho:steelhead,
+    names_to = "species",
+    values_to = 'count'
+  ) %>% 
+  mutate(species = case_when(
+    species == 'coho' ~ "Coho",
+    species == 'jack_coho' ~ "Jack Coho",
+    species == 'steelhead' ~ "Steelhead"
+  )) %>% 
+  
+  # This code is for creating counts by year
+  mutate(year = year(date)) %>% 
+  select(-date) %>% 
+  group_by(year, species) %>% 
+  summarize(annual_count = sum(count))
+```
+
+
+```{r}
+# Plot annual counts by species
+
+ggplot(fish_counts_df) +
+  geom_line(aes(x = year, y = annual_count, color = species), size = 0.7) +
+  scale_color_manual(values = c('dodgerblue3', 'firebrick4', 'cornsilk4')) +
+  theme_minimal() + 
+  scale_x_continuous(breaks = scales::pretty_breaks(5)) +
+  labs(x = "Year", y = 'Count', color = 'Species')
+```
+
+**Figure 3.** Annual counts of Coho, Jack Coho, and Steelhead at Willamette Falls fish passage from 2001 to 2010
+
+**Figure 3 takeaways**
+
+* Steelhead annual counts were the highest every year except 2009, but had a general downward trend.
+* Coho counts stayed relatively stable with some cyclical variation from 2001 to 2008, then roughly quadrupled in magnitude in 2009 and 2010.
+* Jack Coho counts were the smallest of the three species and stayed relatively consistent from 2001 to 2010.

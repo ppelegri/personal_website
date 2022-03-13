@@ -1,0 +1,97 @@
+---
+title: "Oil spills in CA"
+description: |
+  Mapping oil spills in California from 2000-2010.
+author: Patrick Pelegri-O'Day
+date: 2022-03-09
+output:
+  distill::distill_article:
+    code_folding: hide
+    self_contained: false
+  
+---
+
+```{r setup, include=TRUE, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+
+library(raster)
+library(tidyverse)
+library(here)
+library(broom)
+library(sf)
+library(tmap)
+library(spatstat)
+library(maptools)
+```
+
+### Overview
+
+This report visualizes data on oil spills in California recorded in 2008 in the Oil Spill Prevention and Response (OSPR) Incident Tracking database. An oil spill incident in this dataset is defined as "a discharge or threatened discharge of petroleum or other deleterious material into the waters of the state."
+
+**Citation:** Oil Spill Incident Tracking [ds394], 2009-07-23. 2008 Edition.
+
+### Setup
+
+
+```{r}
+# Read in data
+
+oil_raw_sf <- read_sf(here('_posts', '2022-03-09-oil-spill-map', 'data', 'ds394', 'ds394.shp'))
+
+oil_sf <- oil_raw_sf %>% 
+  janitor::clean_names()
+
+counties_sf <- read_sf(here('_posts', '2022-03-09-oil-spill-map', 'data', 'counties', 'CA_Counties_TIGER2016.shp'))
+
+counties_subset_sf <- counties_sf %>% 
+  janitor::clean_names() %>% 
+  select(county_name = name, land_area = aland)
+```
+
+
+```{r}
+# Set coordinate system Projections are different. To align them, we take the CA county projection and apply it to the oil spill data.
+
+oil_4326_sf <- st_transform(oil_sf, st_crs(counties_subset_sf))
+```
+
+### Visual analysis
+
+```{r}
+# Plot with tmap
+
+tmap_mode(mode = 'view')
+tm_shape(counties_subset_sf) + 
+  tm_borders() +
+  tm_fill('land_area', 
+          title = "Land Area (meters squared)",
+          palette = 'BuGn') +
+  tm_borders(col = 'black') +
+tm_shape(oil_4326_sf) +
+  tm_dots(col = 'darkslateblue')
+```
+
+**Figure 1:** This interactive map shows oil spills recorded in California in 2008 by the California Department of Fish and Wildlife.
+
+
+```{r}
+# Make chloropleth map based on count of inland spill events by county
+
+# Join the spill sf and county sf
+county_spills_sf <- counties_subset_sf %>% 
+  st_join(oil_4326_sf)
+
+# Only retain inland spills
+inland_spills_sf <- county_spills_sf %>% 
+  filter(inlandmari == 'Inland') %>% 
+  group_by(county_name) %>% 
+  summarize(spill_count = sum(!is.na(dfgcontrol)))
+
+ggplot(data = inland_spills_sf) +
+  geom_sf(aes(fill = spill_count), color = 'white', size = 0.1) + 
+  scale_fill_gradientn(colors = c('lightgrey', 'darkgoldenrod2', 'darkgoldenrod4')) +
+  theme_minimal() + 
+  labs(fill = 'Number of inland oil spills')
+```
+
+**Figure 2:** Map of inland oil spills by county in 2008. Counties with a greater number of spills are shaded with a darker color.
